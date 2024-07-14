@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shoppinglist
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: shoppinglist
+  template:
+    metadata:
+      labels:
+        app: shoppinglist
+    spec:
+      containers:
+        - name: shoppinglist
+          image: kmjayadeep/shoppinglist:latest
+          env:
+            - name: GIN_MODE
+              value: "release"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "25m"
+            limits:
+              memory: "500Mi"
+              cpu: "250m"
+
