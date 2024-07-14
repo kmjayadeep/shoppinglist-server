@@ -33,11 +33,12 @@
         default = pkgs.mkShell {
           name = "shoppinglist-server";
           packages = [
-            pkgs.go-swagger
+            pkgs.go
+            pkgs.go-swag
           ];
 
           shellHook = ''
-            zsh
+            exec zsh
           '';
 
         };
