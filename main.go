@@ -26,6 +26,17 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"https"}
 
+	shoppingItems = append(shoppingItems, ShoppingItem{
+		Name: "chilly powder",
+		ID:   uuid.NewString(),
+	}, ShoppingItem{
+		Name: "garam masala",
+		ID:   uuid.NewString(),
+	}, ShoppingItem{
+		Name: "milk",
+		ID:   uuid.NewString(),
+	})
+
 	r := gin.Default()
 	r.GET("/api/v1/shopping-list", GetShoppingList)
 	r.POST("/api/v1/shopping-list", AddToShoppingList)
