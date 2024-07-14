@@ -19,21 +19,22 @@ type ShoppingItem struct {
 var shoppingItems []ShoppingItem
 
 func main() {
-  docs.SwaggerInfo.Title = "Shopping List"
+	docs.SwaggerInfo.Title = "Shopping List"
 	docs.SwaggerInfo.Description = "Shopping list server"
 	docs.SwaggerInfo.Version = "1.0"
-  docs.SwaggerInfo.Host = "shoppinglist.cosmos.cboxlab.com"
+	docs.SwaggerInfo.Host = "shoppinglist.cosmos.cboxlab.com"
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"https"}
 
 	r := gin.Default()
 	r.GET("/api/v1/shopping-list", GetShoppingList)
 	r.POST("/api/v1/shopping-list", AddToShoppingList)
-  r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-  r.Run(":8080") // listen and serve on 0.0.0.0:8080
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.Run(":8080") // listen and serve on 0.0.0.0:8080
 }
 
 // GetShoppingList godoc
+//
 //	@Summary		Get Shopping List
 //	@Description	Get shopping list items
 //	@Tags			shopping-list

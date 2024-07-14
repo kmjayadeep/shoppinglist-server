@@ -35,6 +35,7 @@
           packages = [
             pkgs.go
             pkgs.go-swag
+            pkgs.skaffold
           ];
 
           shellHook = ''
