@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: shoppinglist
-          image: kmjayadeep/shoppinglist:latest
+          image: ghcr.io/kmjayadeep/shoppinglist-server:latest
           env:
             - name: GIN_MODE
               value: "release"

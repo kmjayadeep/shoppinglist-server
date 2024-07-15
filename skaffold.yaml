@@ -4,7 +4,7 @@ metadata:
   name: shoppinglist-server
 build:
   artifacts:
-    - image: kmjayadeep/shoppinglist
+    - image: ghcr.io/kmjayadeep/shoppinglist-server
       docker:
         dockerfile: Dockerfile
 manifests:
