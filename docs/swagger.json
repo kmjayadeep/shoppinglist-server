@@ -11,7 +11,84 @@
     },
     "host": "shoppinglist.cosmos.cboxlab.com",
     "basePath": "/api/v1",
-    "paths": {},
+    "paths": {
+        "/shopping-list": {
+            "get": {
+                "description": "Return shopping list items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shopping-list"
+                ],
+                "summary": "Get Shopping List",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.ShoppingItem"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add item to shopping list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shopping-list"
+                ],
+                "summary": "Add to shopping list",
+                "parameters": [
+                    {
+                        "description": "Add shopping item",
+                        "name": "shoppingItem",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.ShoppingItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.ShoppingItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.ShoppingItemRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    },
     "externalDocs": {
         "description": "OpenAPI",
         "url": "https://swagger.io/resources/open-api/"

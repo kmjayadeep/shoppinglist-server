@@ -17,6 +17,10 @@ type ShoppingItem struct {
 	Name string `json:"name"`
 }
 
+type ShoppingItemRequest struct {
+	Name string `json:"name"`
+}
+
 var shoppingItems []ShoppingItem
 
 //	@title			Shopping List
@@ -65,10 +69,22 @@ func GetShoppingList(c *gin.Context) {
 	})
 }
 
+// AddToShoppingList Add item to shopping list
+//
+//	@Summary		Add to shopping list
+//	@Description	Add item to shopping list
+//	@Tags			shopping-list
+//	@Accept			json
+//	@Produce		json
+//	@Param			shoppingItem	body		ShoppingItemRequest	true	"Add shopping item"
+//	@Success		201
+//	@Router			/shopping-list [post]
 func AddToShoppingList(c *gin.Context) {
-	item := ShoppingItem{}
+	item := ShoppingItemRequest{}
 	c.BindJSON(&item)
-	item.ID = uuid.NewString()
-	shoppingItems = append(shoppingItems, item)
+	shoppingItems = append(shoppingItems, ShoppingItem{
+		ID:   uuid.NewString(),
+		Name: item.Name,
+	})
 	c.Status(http.StatusCreated)
 }

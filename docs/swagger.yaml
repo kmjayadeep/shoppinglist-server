@@ -1,4 +1,17 @@
 basePath: /api/v1
+definitions:
+  main.ShoppingItem:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  main.ShoppingItemRequest:
+    properties:
+      name:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -8,7 +21,43 @@ info:
   description: Shopping list manager
   title: Shopping List
   version: "1.0"
-paths: {}
+paths:
+  /shopping-list:
+    get:
+      consumes:
+      - application/json
+      description: Return shopping list items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.ShoppingItem'
+            type: array
+      summary: Get Shopping List
+      tags:
+      - shopping-list
+    post:
+      consumes:
+      - application/json
+      description: Add item to shopping list
+      parameters:
+      - description: Add shopping item
+        in: body
+        name: shoppingItem
+        required: true
+        schema:
+          $ref: '#/definitions/main.ShoppingItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Add to shopping list
+      tags:
+      - shopping-list
 schemes:
 - https
 swagger: "2.0"
