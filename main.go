@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/kmjayadeep/shoppinglist-server/docs"
+	_ "github.com/kmjayadeep/shoppinglist-server/docs"
 
 	"net/http"
 
@@ -13,20 +13,23 @@ import (
 )
 
 type ShoppingItem struct {
-	ID   string `json:"id"`
+	ID   string `json:"id"  swaggertype:"string"`
 	Name string `json:"name"`
 }
 
 var shoppingItems []ShoppingItem
 
-func main() {
-	docs.SwaggerInfo.Title = "Shopping List"
-	docs.SwaggerInfo.Description = "Shopping list server"
-	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "shoppinglist.cosmos.cboxlab.com"
-	docs.SwaggerInfo.BasePath = "/api/v1"
-	docs.SwaggerInfo.Schemes = []string{"https"}
+//	@title			Shopping List
+//	@version		1.0
+//	@description	Shopping list manager
 
+//	@host		shoppinglist.cosmos.cboxlab.com
+//	@BasePath	/api/v1
+//	@Schemes	https
+
+// @externalDocs.description	OpenAPI
+// @externalDocs.url			https://swagger.io/resources/open-api/
+func main() {
 	shoppingItems = append(shoppingItems, ShoppingItem{
 		Name: "chilly powder",
 		ID:   uuid.NewString(),
@@ -47,15 +50,15 @@ func main() {
 	r.Run(":8080") // listen and serve on 0.0.0.0:8080
 }
 
-// GetShoppingList godoc
+// GetShoppingList return shopping list items
 //
 //	@Summary		Get Shopping List
-//	@Description	Get shopping list items
+//	@Description	Return shopping list items
 //	@Tags			shopping-list
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	[]GetShoppingItem
-//	@Router			/ [get]
+//	@Success		200	{array}	ShoppingItem
+//	@Router			/shopping-list [get]
 func GetShoppingList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"items": shoppingItems,

@@ -1,7 +1,19 @@
 {
+    "schemes": [
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Shopping list manager",
+        "title": "Shopping List",
+        "contact": {},
+        "version": "1.0"
     },
-    "paths": {}
+    "host": "shoppinglist.cosmos.cboxlab.com",
+    "basePath": "/api/v1",
+    "paths": {},
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
 }
