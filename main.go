@@ -5,6 +5,7 @@ import (
 
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/swaggo/files"       // swagger embed files
@@ -38,6 +39,8 @@ func main() {
 	})
 
 	r := gin.Default()
+	r.Use(cors.Default()) // Allow all origins
+
 	r.GET("/api/v1/shopping-list", GetShoppingList)
 	r.POST("/api/v1/shopping-list", AddToShoppingList)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
