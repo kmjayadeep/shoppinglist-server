@@ -24,8 +24,6 @@ jobs:
     # Nix-built Docker image won't run properly
     runs-on: ubuntu-22.04
     environment: build
-    outputs:
-      image: ${{ steps.set-image.outputs.image }}
     steps:
       - name: git checkout
         uses: actions/checkout@v3
