@@ -3,47 +3,73 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, flake-utils }:
     let
-      # Systems supported
-      allSystems = [
-        "x86_64-linux" # 64-bit Intel/AMD Linux
-        "aarch64-linux" # 64-bit ARM Linux
-        "x86_64-darwin" # 64-bit Intel macOS
-        "aarch64-darwin" # 64-bit ARM macOS
-      ];
+      # Application metadata
+      name = "shoppinglist-server";
 
-      # Helper to provide system-specific attributes
-      forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f {
-        pkgs = import nixpkgs { inherit system; };
-      });
+      image = {
+        inherit name;
+        registry = "ghcr.io";
+        owner = "kmjayadeep";
+      };
     in
-    {
-      packages = forAllSystems ({ pkgs }: {
-        default = pkgs.buildGoModule {
-          name = "shoppinglist-server";
-          src = ./.;
-          vendorHash = null;
-        };
-      });
 
-      devShells = forAllSystems ({ pkgs }: {
-        default = pkgs.mkShell {
-          name = "shoppinglist-server";
-          packages = [
-            pkgs.go
-            pkgs.go-swag
-            pkgs.skaffold
-          ];
+    flake-utils.lib.eachDefaultSystem
+      (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+          };
+        in
+        {
+          packages = rec {
+            # Enables us to build the Go service by running plain old `nix build`
+            default = shoppinglist-server;
 
-          shellHook = ''
-            exec zsh
-          '';
+            shoppinglist-server = pkgs.buildGo122Module {
+              inherit name;
+              vendorHash = null;
+              src = ./.;
+            };
 
-        };
-      });
+            # Intended only for CI. The image fails to run if you build it on a
+            # non-`x86_64-linux` system, despite the build succeeding. There are
+            # ways around this in Nix but in this case we only need to build the
+            # image in CI.
+            docker =
+              pkgs.dockerTools.buildImage {
+                name = "${image.registry}/${image.owner}/${image.name}";
+                config = {
+                  Cmd = [ "${shoppinglist-server}/bin/${name}" ];
+                  ExposedPorts."8080/tcp" = { };
+                };
+              };
+          };
 
-    };
+          # Cross-platform development environment (including CI)
+          devShells.default = pkgs.mkShell {
+            # Packages available in the environment
+            packages = with pkgs; [
+              # Golang
+              go_1_22
+              gotools # goimports, etc.
+
+              # Utilities
+              httpie # For arbitrary HTTP calls
+              go-swag
+
+              # DevOps
+              kubectl # Kubernetes CLI
+              kubectx # Kubernetes context management utility
+            ];
+
+            shellHook = ''
+              exec zsh
+            '';
+          };
+        });
 }
