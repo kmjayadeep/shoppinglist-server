@@ -43,6 +43,7 @@
             docker =
               pkgs.dockerTools.buildImage {
                 name = "${image.registry}/${image.owner}/${image.name}";
+                tag  = "latest";
                 config = {
                   Cmd = [ "${shoppinglist-server}/bin/${name}" ];
                   ExposedPorts."8080/tcp" = { };
