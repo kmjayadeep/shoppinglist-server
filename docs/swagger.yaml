@@ -23,6 +23,26 @@ info:
   version: "1.0"
 paths:
   /shopping-list:
+    delete:
+      consumes:
+      - application/json
+      description: Delete item from shopping list
+      parameters:
+      - description: shopping item id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Delete from shopping list
+      tags:
+      - shopping-list
     get:
       consumes:
       - application/json

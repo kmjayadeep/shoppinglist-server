@@ -53,6 +53,7 @@ func main() {
 
 	r.GET("/api/v1/shopping-list", GetShoppingList)
 	r.POST("/api/v1/shopping-list", AddToShoppingList)
+	r.DELETE("/api/v1/shopping-list/:id", DeleteFromShoppingList)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080") // listen and serve on 0.0.0.0:8080
 }
@@ -90,4 +91,38 @@ func AddToShoppingList(c *gin.Context) {
 		Name: item.Name,
 	})
 	c.Status(http.StatusCreated)
+}
+
+// DeleteFromShoppingList Delete item from shopping list
+//
+//	@Summary		Delete from shopping list
+//	@Description	Delete item from shopping list
+//	@Tags			shopping-list
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		string	true	"shopping item id"
+//	@Success		200
+//  @Failure     404
+//	@Router			/shopping-list [delete]
+func DeleteFromShoppingList(c *gin.Context) {
+	id := c.Param("id")
+
+	newItems := []ShoppingItem{}
+	found := false
+
+	for _, item := range shoppingItems {
+		if item.ID == id {
+			found = true
+		} else {
+			newItems = append(newItems, item)
+		}
+	}
+
+	if found {
+		shoppingItems = newItems
+		c.Status(http.StatusOK)
+		return
+	}
+
+	c.Status(http.StatusNotFound)
 }
