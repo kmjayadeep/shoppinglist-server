@@ -41,6 +41,9 @@ func main() {
 		Name: "garam masala",
 		ID:   uuid.NewString(),
 	}, ShoppingItem{
+		Name: "eggs",
+		ID:   uuid.NewString(),
+	}, ShoppingItem{
 		Name: "milk",
 		ID:   uuid.NewString(),
 	})
