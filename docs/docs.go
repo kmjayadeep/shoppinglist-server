@@ -99,6 +99,44 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/shopping-list/{id}": {
+            "post": {
+                "description": "Edit item in shopping list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shopping-list"
+                ],
+                "summary": "Edit shopping list",
+                "parameters": [
+                    {
+                        "description": "Edit shopping item",
+                        "name": "shoppingItem",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.ShoppingItemRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "shopping item id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         }
     },
     "definitions": {
