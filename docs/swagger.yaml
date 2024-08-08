@@ -1,5 +1,20 @@
 basePath: /api/v1
 definitions:
+  inventory.Item:
+    properties:
+      expiry:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      quntity:
+        type: integer
+      storageLocation:
+        type: string
+      unit:
+        type: string
+    type: object
   main.ShoppingItem:
     properties:
       id:
@@ -22,6 +37,23 @@ info:
   title: Shopping List
   version: "1.0"
 paths:
+  /inventory:
+    get:
+      consumes:
+      - application/json
+      description: Return items in inventory
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/inventory.Item'
+            type: array
+      summary: Get Inventory
+      tags:
+      - inventory
   /shopping-list:
     delete:
       consumes:

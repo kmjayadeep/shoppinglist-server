@@ -15,6 +15,32 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/inventory": {
+            "get": {
+                "description": "Return items in inventory",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "inventory"
+                ],
+                "summary": "Get Inventory",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/inventory.Item"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/shopping-list": {
             "get": {
                 "description": "Return shopping list items",
@@ -140,6 +166,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "inventory.Item": {
+            "type": "object",
+            "properties": {
+                "expiry": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "quntity": {
+                    "type": "integer"
+                },
+                "storageLocation": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "string"
+                }
+            }
+        },
         "main.ShoppingItem": {
             "type": "object",
             "properties": {

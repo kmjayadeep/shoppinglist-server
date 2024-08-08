@@ -30,6 +30,15 @@ func init() {
 
 }
 
+// Get return inventory items
+//
+//	@Summary		Get Inventory
+//	@Description	Return items in inventory
+//	@Tags			inventory
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}	Item
+//	@Router			/inventory [get]
 func Get(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"items": inventoryItems,
