@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "github.com/kmjayadeep/shoppinglist-server/docs"
+	"github.com/kmjayadeep/shoppinglist-server/pkg/inventory"
 
 	"net/http"
 
@@ -55,6 +56,9 @@ func main() {
 	r.POST("/api/v1/shopping-list", AddToShoppingList)
 	r.POST("/api/v1/shopping-list/:id", EditShoppingList)
 	r.DELETE("/api/v1/shopping-list/:id", DeleteFromShoppingList)
+
+	r.GET("/api/v1/inventory", inventory.Get)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080") // listen and serve on 0.0.0.0:8080
 }
