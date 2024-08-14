@@ -15,6 +15,19 @@ definitions:
       unit:
         type: string
     type: object
+  inventory.ItemRequest:
+    properties:
+      expiry:
+        type: string
+      name:
+        type: string
+      quntity:
+        type: integer
+      storageLocation:
+        type: string
+      unit:
+        type: string
+    type: object
   main.ShoppingItem:
     properties:
       id:
@@ -38,6 +51,26 @@ info:
   version: "1.0"
 paths:
   /inventory:
+    delete:
+      consumes:
+      - application/json
+      description: Delete item from inventory list
+      parameters:
+      - description: inventory item id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Delete from inventory list
+      tags:
+      - inventory
     get:
       consumes:
       - application/json
@@ -52,6 +85,50 @@ paths:
               $ref: '#/definitions/inventory.Item'
             type: array
       summary: Get Inventory
+      tags:
+      - inventory
+    post:
+      consumes:
+      - application/json
+      description: Add item to inventory list
+      parameters:
+      - description: Add inventory item
+        in: body
+        name: Item
+        required: true
+        schema:
+          $ref: '#/definitions/inventory.ItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Add to inventory list
+      tags:
+      - inventory
+  /inventory/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Modify inventory item
+      parameters:
+      - description: Edit inventory item
+        in: body
+        name: Item
+        required: true
+        schema:
+          $ref: '#/definitions/inventory.ItemRequest'
+      - description: inventory item id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Modify inventory item
       tags:
       - inventory
   /shopping-list:
