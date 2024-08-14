@@ -58,6 +58,9 @@ func main() {
 	r.DELETE("/api/v1/shopping-list/:id", DeleteFromShoppingList)
 
 	r.GET("/api/v1/inventory", inventory.Get)
+	r.POST("/api/v1/inventory/:id", inventory.Edit)
+	r.POST("/api/v1/inventory", inventory.Add)
+	r.DELETE("/api/v1/inventory/:id", inventory.Delete)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080") // listen and serve on 0.0.0.0:8080
