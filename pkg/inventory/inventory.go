@@ -100,11 +100,12 @@ func Add(c *gin.Context) {
 	item := ItemRequest{}
 	c.BindJSON(&item)
 	inventoryItems = append(inventoryItems, Item{
-		ID:       uuid.NewString(),
-		Name:     item.Name,
-		Expiry:   item.Expiry,
-		Quantity: item.Quantity,
-		Unit:     item.Unit,
+		ID:              uuid.NewString(),
+		Name:            item.Name,
+		Expiry:          item.Expiry,
+		Quantity:        item.Quantity,
+		StorageLocation: item.StorageLocation,
+		Unit:            item.Unit,
 	})
 	c.Status(http.StatusCreated)
 }
