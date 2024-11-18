@@ -2,6 +2,7 @@ package inventory
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -100,7 +101,13 @@ func (s *InventoryService) Add(c *gin.Context) {
 //	 @Failure     404
 //		@Router			/inventory [delete]
 func (s *InventoryService) Delete(c *gin.Context) {
-	// id := c.Param("id")
+	id := c.Param("id")
+	i, _ := strconv.Atoi(id)
 
-	c.Status(http.StatusNotFound)
+	err := s.repo.DeleteInventoryByID(uint(i))
+	if err != nil {
+		c.Status(http.StatusNotFound)
+	} else {
+		c.Status(http.StatusOK)
+	}
 }

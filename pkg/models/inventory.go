@@ -24,6 +24,12 @@ func (r *Repository) GetInventoryByID(id uint) (*Inventory, error) {
 	return &inv, err
 }
 
+func (r *Repository) DeleteInventoryByID(id uint) error {
+	var inv Inventory
+	err := r.db.Delete(&inv, id).Error
+	return err
+}
+
 func (r *Repository) GetInventory() ([]Inventory, error) {
 	inv := []Inventory{}
 	res := r.db.Find(&inv)
