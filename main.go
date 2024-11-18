@@ -1,8 +1,10 @@
 package main
 
 import (
+	"github.com/kmjayadeep/shoppinglist-server/config"
 	_ "github.com/kmjayadeep/shoppinglist-server/docs"
 	"github.com/kmjayadeep/shoppinglist-server/pkg/inventory"
+	"github.com/kmjayadeep/shoppinglist-server/pkg/models"
 
 	"net/http"
 
@@ -11,6 +13,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/swaggo/files"       // swagger embed files
 	"github.com/swaggo/gin-swagger" // gin-swagger middleware
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type ShoppingItem struct {
@@ -48,6 +53,18 @@ func main() {
 		Name: "milk",
 		ID:   uuid.NewString(),
 	})
+
+	conf := config.LoadConfig()
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  conf.DatabaseURL,
+		PreferSimpleProtocol: true,
+	}), &gorm.Config{})
+	if err != nil {
+		panic("unable to connect to db")
+	}
+
+	repo := models.NewRepository(db)
+	repo.AutoMigrate()
 
 	r := gin.Default()
 	r.Use(cors.Default()) // Allow all origins
