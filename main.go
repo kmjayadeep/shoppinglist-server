@@ -66,6 +66,8 @@ func main() {
 	repo := models.NewRepository(db)
 	repo.AutoMigrate()
 
+	invService := inventory.NewService(repo)
+
 	r := gin.Default()
 	r.Use(cors.Default()) // Allow all origins
 
@@ -74,10 +76,10 @@ func main() {
 	r.POST("/api/v1/shopping-list/:id", EditShoppingList)
 	r.DELETE("/api/v1/shopping-list/:id", DeleteFromShoppingList)
 
-	r.GET("/api/v1/inventory", inventory.Get)
-	r.POST("/api/v1/inventory/:id", inventory.Edit)
-	r.POST("/api/v1/inventory", inventory.Add)
-	r.DELETE("/api/v1/inventory/:id", inventory.Delete)
+	r.GET("/api/v1/inventory", invService.Get)
+	r.POST("/api/v1/inventory/:id", invService.Edit)
+	r.POST("/api/v1/inventory", invService.Add)
+	r.DELETE("/api/v1/inventory/:id", invService.Delete)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080") // listen and serve on 0.0.0.0:8080

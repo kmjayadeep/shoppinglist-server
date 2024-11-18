@@ -23,3 +23,9 @@ func (r *Repository) GetInventoryByID(id uint) (*Inventory, error) {
 	err := r.db.First(&inv, id).Error
 	return &inv, err
 }
+
+func (r *Repository) GetInventory() ([]Inventory, error) {
+	inv := []Inventory{}
+	res := r.db.Find(&inv)
+	return inv, res.Error
+}

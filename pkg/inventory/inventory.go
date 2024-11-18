@@ -1,19 +1,21 @@
 package inventory
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/kmjayadeep/shoppinglist-server/pkg/models"
 )
 
-type Item struct {
-	ID              string    `json:"id"  swaggertype:"string"`
-	Name            string    `json:"name"`
-	Expiry          time.Time `json:"expiry"`
-	Quantity        int       `json:"quntity"`
-	StorageLocation string    `json:"storageLocation"`
-	Unit            string    `json:"unit"`
+type InventoryService struct {
+	repo *models.Repository
+}
+
+func NewService(repo *models.Repository) *InventoryService {
+	return &InventoryService{
+		repo: repo,
+	}
 }
 
 type ItemRequest struct {
@@ -22,20 +24,6 @@ type ItemRequest struct {
 	Quantity        int       `json:"quntity"`
 	StorageLocation string    `json:"storageLocation"`
 	Unit            string    `json:"unit"`
-}
-
-var inventoryItems []Item
-
-func init() {
-	inventoryItems = append(inventoryItems, Item{
-		Name:            "mayo",
-		ID:              uuid.NewString(),
-		Expiry:          time.Now().Add(7 * 24 * 60 * time.Minute),
-		StorageLocation: "fridge",
-		Unit:            "KG",
-		Quantity:        1,
-	})
-
 }
 
 // Get return inventory items
@@ -47,9 +35,11 @@ func init() {
 //	@Produce		json
 //	@Success		200	{array}	Item
 //	@Router			/inventory [get]
-func Get(c *gin.Context) {
+func (s *InventoryService) Get(c *gin.Context) {
+	items, _ := s.repo.GetInventory()
+
 	c.JSON(http.StatusOK, gin.H{
-		"items": inventoryItems,
+		"items": items,
 	})
 }
 
@@ -64,23 +54,11 @@ func Get(c *gin.Context) {
 //	@Param			id	path		string	true	"inventory item id"
 //	@Success		200
 //	@Router			/inventory/{id} [post]
-func Edit(c *gin.Context) {
-	id := c.Param("id")
+func (s *InventoryService) Edit(c *gin.Context) {
+	// id := c.Param("id")
 	req := ItemRequest{}
 	if err := c.BindJSON(&req); err != nil {
 		return
-	}
-
-	for k, item := range inventoryItems {
-		if id == item.ID {
-			inventoryItems[k].Name = req.Name
-			inventoryItems[k].Expiry = req.Expiry
-			inventoryItems[k].Quantity = req.Quantity
-			inventoryItems[k].StorageLocation = req.StorageLocation
-			inventoryItems[k].Unit = req.Unit
-			c.Status(http.StatusOK)
-			return
-		}
 	}
 
 	c.Status(http.StatusNotFound)
@@ -96,17 +74,17 @@ func Edit(c *gin.Context) {
 //	@Param			Item	body		ItemRequest	true	"Add inventory item"
 //	@Success		201
 //	@Router			/inventory [post]
-func Add(c *gin.Context) {
+func (s *InventoryService) Add(c *gin.Context) {
 	item := ItemRequest{}
 	c.BindJSON(&item)
-	inventoryItems = append(inventoryItems, Item{
-		ID:              uuid.NewString(),
+	inv := models.Inventory{
 		Name:            item.Name,
 		Expiry:          item.Expiry,
 		Quantity:        item.Quantity,
 		StorageLocation: item.StorageLocation,
 		Unit:            item.Unit,
-	})
+	}
+	_ = s.repo.CreateInventory(&inv)
 	c.Status(http.StatusCreated)
 }
 
@@ -121,25 +99,8 @@ func Add(c *gin.Context) {
 //		@Success		200
 //	 @Failure     404
 //		@Router			/inventory [delete]
-func Delete(c *gin.Context) {
-	id := c.Param("id")
-
-	newItems := []Item{}
-	found := false
-
-	for _, item := range inventoryItems {
-		if item.ID == id {
-			found = true
-		} else {
-			newItems = append(newItems, item)
-		}
-	}
-
-	if found {
-		inventoryItems = newItems
-		c.Status(http.StatusOK)
-		return
-	}
+func (s *InventoryService) Delete(c *gin.Context) {
+	// id := c.Param("id")
 
 	c.Status(http.StatusNotFound)
 }
